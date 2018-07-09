@@ -41,6 +41,7 @@ Components
     }
     ```
 
+
 Props vs. State
 ---------------
 
@@ -58,6 +59,14 @@ Props vs. State
         };
     ```
 
+
+Controlled vs. Uncontrolled
+---------------------------
+
+- `onChange` events bubble up so you can put an `onChange` on a single form element or on the `form` tag itself. Though, usually, you use an `onSubmit` event on a `form`
+- React docs suggest using a controlled input most of the time
+- What really makes a controlled input controlled is a `value` and `onChange` prop - so the state is living in the parent 
+- If the _only_ thing that changes the value of a field is the user, then the field should be uncontrolled. The instant the app can do something to value of the field, then it should be a controlled field.
 
 
 
