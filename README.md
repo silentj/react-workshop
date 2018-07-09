@@ -5,7 +5,7 @@ Random
 ------
 
 - Webpack is what watches the directory and republisheds updated files
-
+- Instead of MVC, he tends to think of State, Markup and Behaviour
 
 Rendering
 ---------
@@ -40,6 +40,19 @@ Components
         summary: 'Summary',
     }
     ```
+
+Props vs. State
+---------------
+
+- Key insight: `props` are just `state` that come from a parent
+- `static getDerivedStateFromProps(nextProps, prevState)`
+    - New in 16.3 
+    - It's `static`!
+    - He couldn't get it working... and it seems really, really rare
+    - If we have problems with that, he tried `UNSAFE_componentWillReceiveProps(nextProps)`
+- Render a component with all props from the parent: `<Component {...this.props}/>`
+
+
 
 
 
