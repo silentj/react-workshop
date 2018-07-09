@@ -69,9 +69,9 @@ class App extends React.Component {
         activeIndex: 0
     };
 
-    selectTab(activeIndex) {
-        this.setState({ activeIndex });
-    }
+    selectTab = (index) => {
+        this.setState({ activeIndex: index });
+    };
 
     render() {
     return (
@@ -82,7 +82,7 @@ class App extends React.Component {
 
         <Tabs data={this.props.tabs}
               activeIndex={this.state.activeIndex}
-              onChange={ index => this.selectTab(index) }/>
+              onChange={this.selectTab}/>
       </div>
     );
   }

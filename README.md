@@ -51,7 +51,12 @@ Props vs. State
     - He couldn't get it working... and it seems really, really rare
     - If we have problems with that, he tried `UNSAFE_componentWillReceiveProps(nextProps)`
 - Render a component with all props from the parent: `<Component {...this.props}/>`
-
+- When passing a function reference to an event handler, he declares the function at the class level with an arrow function:
+    ```
+    selectTab = (index) => {
+            this.setState({ activeIndex: index });
+        };
+    ```
 
 
 
