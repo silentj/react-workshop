@@ -25,12 +25,41 @@ const DATA = {
     { id: 3, name: "tostada", type: "mexican" },
     { id: 4, name: "mushy peas", type: "english" },
     { id: 5, name: "fish and chips", type: "english" },
-    { id: 6, name: "black pudding", type: "english" }
+    { id: 6, name: "black pudding", type: "english" },
+    { id: 7, name: "hamburger", type: "american" },
+    { id: 8, name: "apple pie", type: "american" },
   ]
 };
 
-function Menu() {
-  return <div>Open the console, you have failing tests.</div>;
+const types = DATA.items
+        .map(item => item.type)
+        .sort()
+        .filter((elem, pos, arr) => arr.indexOf(elem) == pos);
+
+class Menu extends React.Component {
+
+  state = { 
+    selectedType: 'mexican',
+    sortAsc: true,
+  };
+
+  render() {
+    return <div>
+        <h1>{DATA.title}</h1>
+        <select value={this.state.selectedType} onChange={event => this.setState({selectedType: event.target.value})}>
+          {types.map(type => <option key={type}>{type}</option>)}
+        </select>
+        <button onClick={() => this.setState({sortAsc: !this.state.sortAsc})}>
+          Sort {this.state.sortAsc ? "descending" : "ascending"}
+        </button>
+        <ul>
+          {DATA.items
+            .filter(item => item.type === this.state.selectedType)
+            .sort(sortBy((this.state.sortAsc ? '' : '-') + 'name'))
+            .map(item => <li key={item.id}>{item.name}</li>)}
+        </ul>
+      </div>;
+  }
 }
 
 ReactDOM.render(<Menu />, document.getElementById("app"));

@@ -1,3 +1,65 @@
+React training
+==============
+
+Random
+------
+
+- Webpack is what watches the directory and republisheds updated files
+
+
+Rendering
+---------
+
+- React describes DOM nodes, not HTML... hence `className` (which you can query in the browser dev tools) instead of `class` (which you use when writing HTML).
+- Items in a list need to have a unique `key` property so React can track changes over time
+- `const element = React.createElement(elementType, props, elementContent)` like `const element = React.createElement('div', { className: 'hot' }, "Hello, world!")`
+- `ReactDOM.render(element, whereToPutIt)` like `ReactDOM.render(element, document.getElementById('root'))`
+- JSX lets you dispense with the `React.createElement` stuff. So my earlier example becomes `<div className='hot'>Hello, World!</div>`
+
+
+Components
+----------
+
+- `this.props.children` - `children` prop is a special prop and it's whatever you send inside your component.
+- `this.props`, `this.state` and `this.props.children`
+- `propTypes` - like names/types that have to be declared in a dynamic language
+    ```
+    import PropTypes from 'prop-types';
+    
+    class MyComponent extends React.Component {
+        static propTypes = {
+            summary: PropTypes.strig.isRequired,
+            onToggle: PropTypes.func,
+            children: PropTypes.node,
+        }
+    [...]
+    ```
+- `defaultProps` - default values if props aren't given
+    ```
+    static defaultProps = {
+        summary: 'Summary',
+    }
+    ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------
+
+
 ## Welcome to React Training!
 
 This repo contains the course material for [React Training](https://reacttraining.com/). Before attending the training, please make sure you can run this repository.
