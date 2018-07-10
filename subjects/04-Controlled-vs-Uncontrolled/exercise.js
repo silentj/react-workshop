@@ -21,13 +21,31 @@ import serializeForm from "form-serialize";
 
 class CheckoutForm extends React.Component {
 
-  state = {
-      billingName: '',
-      billingState: '',
-      isShippingSameAsBilling: '',
-      shippingName: '',
-      shippingState: '',
+    constructor(props) {
+        super(props);
+
+        const formState = localStorage.formState;
+
+        if (formState) {
+            this.state = JSON.parse(formState);
+        } else {
+            this.state = {
+                billingName: '',
+                billingState: '',
+                isShippingSameAsBilling: true,
+                shippingName: '',
+                shippingState: '',
+            };
+        }
+    }
+
+  handlebeforeUnload = () => {
+      localStorage.formState = JSON.stringify(this.state);
   };
+
+  componentDidMount() {
+      window.addEventListener("beforeunload", this.handlebeforeUnload);
+  }
 
   render() {
     return (
@@ -43,6 +61,7 @@ class CheckoutForm extends React.Component {
               <label>
                 Billing Name: <input type="text"
                                      name="billingName"
+                                     defaultValue={this.state.billingName}
                                      onChange={event => this.setState({billingName: event.target.value})}/>
               </label>
             </p>
@@ -51,6 +70,7 @@ class CheckoutForm extends React.Component {
                 Billing State: <input type="text"
                                       size="3"
                                       name="billingState"
+                                      defaultValue={this.state.billingState}
                                       onChange={event => this.setState({billingState: event.target.value})}/>
               </label>
             </p>
@@ -62,6 +82,7 @@ class CheckoutForm extends React.Component {
             <label>
               <input type="checkbox"
                      name="isShippingSameAsBilling"
+                     defaultChecked={this.state.isShippingSameAsBilling}
                      onChange={event => {
                          if (event.target.checked) {
                              this.setState({
