@@ -15,8 +15,9 @@
 import "./styles.css";
 
 import React from "react";
-import { render } from "react-dom";
-import { login, sendMessage, subscribeToMessages } from "./utils";
+import {render} from "react-dom";
+import {sendMessage, subscribeToMessages} from "./utils";
+import serializeForm from "form-serialize";
 
 /*
 Here's how to use the utils:
@@ -40,48 +41,88 @@ unsubscribe() // stop listening for new messages
 
 The world is your oyster!
 */
+class AutoScroller extends React.Component {
+
+  componentDidUpdate() {
+    this.node.scrollTop = this.node.scrollHeight;
+  }
+
+  render() {
+    return <div {...this.props} ref={node => {this.node = node}} />
+  }
+}
 
 class Chat extends React.Component {
+
+  state = {
+    currentMessage: "",
+    messages: [],
+  };
+
+  componentDidMount() {
+    subscribeToMessages(messages => {
+      this.setState({messages: messages});
+    })
+  }
+
+  handleSubmit = (event) => {
+      event.preventDefault();
+      const values = serializeForm(event.target, { hash: true });
+      this.setState({currentMessage: ""});
+      sendMessage(
+          'Brezza', // the auth.uid string
+          'brezza', // the username
+          'http://www.traveller.com.au/content/dam/images/g/u/n/q/h/0/image.related.articleLeadwide.620x349.gunpvd.png', // the user's profile image
+          values.message // the message
+      );
+  };
+
   render() {
+      const goodMessages = this.state.messages.filter(message => typeof message.text === 'string');
+      const limitedGoodMessages = goodMessages.slice(-200);
+      let currentGroupUid;
+      const groupedMessages = limitedGoodMessages.reduce((accumulator, currentMessage) => {
+            if (currentGroupUid && currentGroupUid === currentMessage.uid) {
+                accumulator.slice(-1)[0].push(currentMessage);
+            } else {
+                currentGroupUid = currentMessage.uid;
+                const newGroup = [];
+                newGroup.push(currentMessage);
+                accumulator.push(newGroup);
+            }
+            return accumulator;
+          }, []);
+
     return (
       <div className="chat">
         <header className="chat-header">
           <h1 className="chat-title">HipReact</h1>
-          <p className="chat-message-count"># messages: 8</p>
+          <p className="chat-message-count"># messages: {this.state.messages.length}</p>
         </header>
-        <div className="messages">
+        <AutoScroller className="messages">
           <ol className="message-groups">
-            <li className="message-group">
-              <div className="message-group-avatar">
-                <img src="https://avatars1.githubusercontent.com/u/92839" />
-              </div>
-              <ol className="messages">
-                <li className="message">Hey, Bruce!</li>
-                <li className="message">
-                  So, a QA Engineer walks into a bar.
-                </li>
-                <li className="message">Orders a beer.</li>
-                <li className="message">Orders 0 beers.</li>
-                <li className="message">Orders 999999999 beers.</li>
-                <li className="message">Orders -1 beers.</li>
-                <li className="message">Orders a sfdeljknesv.</li>
-              </ol>
-            </li>
-            <li className="message-group">
-              <div className="message-group-avatar">
-                <img src="https://pbs.twimg.com/profile_images/534863086276988928/bX3juDCC_400x400.jpeg" />
-              </div>
-              <ol className="messages">
-                <li className="message">Hahaha 😅</li>
-              </ol>
-            </li>
+              {groupedMessages.map(group =>
+                  <li className="message-group" key={group[0].timestamp}>
+                      <div className="message-group-avatar">
+                          <img src={group[0].avatarURL} />
+                      </div>
+                      <ol className="messages">
+                      {group.map(message =>
+                          <li className="message" key={message._key}>{message.text}</li>
+                      )}
+                      </ol>
+                  </li>
+              )}
           </ol>
-        </div>
-        <form className="new-message-form">
+        </AutoScroller>
+
+        <form className="new-message-form" onSubmit={this.handleSubmit}>
           <div className="new-message">
             <input
-              ref="message"
               type="text"
+              name="message"
+              value={this.state.currentMessage}
+              onChange={event => this.setState({currentMessage: event.target.value})}
               placeholder="say something..."
             />
           </div>
