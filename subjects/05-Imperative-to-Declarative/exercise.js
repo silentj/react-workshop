@@ -13,15 +13,24 @@ import "bootstrap-webpack";
 class Modal extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
-    children: PropTypes.node
+    children: PropTypes.node,
+    isOpen: PropTypes.bool,
   };
 
-  open() {
-    $(this.node).modal("show");
+  static defaultProps = {
+    isOpen: false,
+  };
+
+  updateModal() {
+      $(this.node).modal(this.props.isOpen ? "show" : "hide");
   }
 
-  close() {
-    $(this.node).modal("hide");
+  componentDidUpdate() {
+    this.updateModal();
+  }
+
+  componentDidMount() {
+      this.updateModal();
   }
 
   render() {
@@ -41,12 +50,9 @@ class Modal extends React.Component {
 }
 
 class App extends React.Component {
-  openModal = () => {
-    this.modal.open();
-  };
 
-  closeModal = () => {
-    this.modal.close();
+  state = {
+    isOpen: false,
   };
 
   render() {
@@ -54,13 +60,13 @@ class App extends React.Component {
       <div className="container">
         <h1>Let’s make bootstrap modal declarative</h1>
 
-        <button className="btn btn-primary" onClick={this.openModal}>
+        <button className="btn btn-primary" onClick={() => this.setState({isOpen: true})}>
           open modal
         </button>
 
         <Modal
           title="Declarative is better"
-          ref={modal => (this.modal = modal)}
+          isOpen={this.state.isOpen}
         >
           <p>Calling methods on instances is a FLOW not a STOCK!</p>
           <p>
@@ -72,7 +78,7 @@ class App extends React.Component {
             snapshots of state.
           </p>
           <button
-            onClick={this.closeModal}
+            onClick={() => this.setState({isOpen: false})}
             type="button"
             className="btn btn-default"
           >

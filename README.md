@@ -69,6 +69,11 @@ Controlled vs. Uncontrolled
 - If the _only_ thing that changes the value of a field is the user, then the field should be uncontrolled. The instant the app can do something to value of the field, then it should be a controlled field.
 
 
+Imperative to Declarative
+-------------------------
+
+- `render()` should always be side-effect free. `componentDidMount()` and `componentDidUpdate()` is the place for side effect code.
+- `render()`'s job is to return a String based on the state. It's totally functional. `componentDidMount/Update()` are not.
 
 
 
