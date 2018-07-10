@@ -41,14 +41,26 @@ unsubscribe() // stop listening for new messages
 
 The world is your oyster!
 */
+
+const AUTOSCROLL_BUFFER = 20;
+
 class AutoScroller extends React.Component {
 
+  // This is _not_ state. MJ suggested it shouldn't be.
+  shouldAutoscroll = true;
+
+  onScroll = (event) => {
+      const node = event.target;
+      this.shouldAutoscroll = (node.scrollHeight - node.scrollTop - node.offsetHeight) < AUTOSCROLL_BUFFER;
+  };
+
   componentDidUpdate() {
-    this.node.scrollTop = this.node.scrollHeight;
+      if (this.shouldAutoscroll)
+        this.node.scrollTop = this.node.scrollHeight;
   }
 
   render() {
-    return <div {...this.props} ref={node => {this.node = node}} />
+    return <div {...this.props} ref={node => {this.node = node}} onScroll={this.onScroll} />
   }
 }
 
