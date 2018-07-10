@@ -23,9 +23,11 @@ const FixtureData = [
 
 describe("when <Tabs> is rendered", () => {
   let node;
+  let tabs;
   beforeEach(() => {
     node = document.createElement("div");
     ReactDOM.render(<Tabs data={FixtureData} />, node);
+    tabs = node.querySelectorAll(".Tab");
   });
 
   afterEach(() => {
@@ -33,30 +35,48 @@ describe("when <Tabs> is rendered", () => {
   });
 
   it("renders the USA tab", () => {
-    const tabs = node.querySelectorAll(".Tab");
     expect(tabs[0].innerText).toEqual(
-      FixtureData[0].label,
-      "USA tab was not rendered"
-    );
+      FixtureData[0].label);
   });
 
-  it("renders the Brazil tab");
+  it("renders the Brazil tab", () => {
+      expect(tabs[1].innerText).toEqual(
+          FixtureData[1].label);
+  });
 
-  it("renders the Russia tab");
+  it("renders the Russia tab", () => {
+      expect(tabs[2].innerText).toEqual(
+          FixtureData[2].label);
+  });
 
-  it("activates the first tab");
+  it("activates the first tab", () => {
+      expect(tabs[0].style.borderBottomColor).toEqual(
+          "rgb(0, 0, 0)");
+  });
 
-  it("does not activate the second tab");
+  it("does not activate the second tab", () => {
+      expect(tabs[1].style.borderBottomColor).toEqual(
+          "rgb(204, 204, 204)");
+  });
 
   describe("after clicking the second tab", () => {
     beforeEach(() => {
-      // TODO: simulate a click on the second tab
+      Simulate.click(tabs[1]);
     });
 
-    it("activates the second tab");
+    it("activates the second tab", () => {
+        expect(tabs[1].style.borderBottomColor).toEqual(
+            "rgb(0, 0, 0)");
+    });
 
-    it("deactivates the first tab");
+    it("deactivates the first tab", () => {
+        expect(tabs[0].style.borderBottomColor).toEqual(
+            "rgb(204, 204, 204)");
+    });
 
-    it("puts the correct content in the panel");
+    it("puts the correct content in the panel", () => {
+      expect(node.querySelector(".TabPanel").innerText).toEqual(
+          "Sunshine, beaches, and Carnival");
+    });
   });
 });
