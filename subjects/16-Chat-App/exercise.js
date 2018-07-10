@@ -16,7 +16,7 @@ import "./styles.css";
 
 import React from "react";
 import {render} from "react-dom";
-import {sendMessage, subscribeToMessages} from "./utils";
+import {login, sendMessage, subscribeToMessages} from "./utils";
 import serializeForm from "form-serialize";
 
 /*
@@ -72,21 +72,24 @@ class Chat extends React.Component {
   };
 
   componentDidMount() {
-    subscribeToMessages(messages => {
-      this.setState({messages: messages});
-    })
+      login(user => {
+          this.setState({user: user});
+      });
+
+      subscribeToMessages(messages => {
+          this.setState({messages: messages});
+      })
   }
 
   handleSubmit = (event) => {
       event.preventDefault();
       const values = serializeForm(event.target, { hash: true });
       this.setState({currentMessage: ""});
-      sendMessage(
-          'Brezza', // the auth.uid string
-          'brezza', // the username
-          'http://www.traveller.com.au/content/dam/images/g/u/n/q/h/0/image.related.articleLeadwide.620x349.gunpvd.png', // the user's profile image
-          values.message // the message
-      );
+      sendMessage({
+              userId: this.state.user.id,
+              photoURL: this.state.user.photoURL,
+              text: values.message,
+          });
   };
 
   render() {
