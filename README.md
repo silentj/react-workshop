@@ -76,6 +76,12 @@ Imperative to Declarative
 - `render()`'s job is to return a String based on the state. It's totally functional. `componentDidMount/Update()` are not.
 
 
+Higher Order Components
+-----------------------
+
+- Higher order components are usually named `withXxx` where `xxxx` is the name of the prop it adds
+- Higher order components must be sure to pass through all the props to their wrapped components
+
 
 
 
