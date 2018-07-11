@@ -114,6 +114,25 @@ Render Optimizations
 - If your rendering shows it's spending a lot of time doing react tree reconciliation on a component, you can also try using `React.PureComponent`. Usually, this is only something you want to do for leaf nodes: items in a list, etc Things rendered hundreds of times that don't actually change when they're on the page (maybe you'll add more items to a list, but items in the list won't actually change)
 
 
+Animation
+=========
+
+- Common approach is to move animation (side effect) into the `componentDidUpdate` method. But then you can't really see that there's something going on in the component.
+- Check out `react-motion` and it's `<Motion>` component
+    - Give it a `style` prop with the value you want it to get to. And then you get handed interpolated value in the render prop.
+    ```
+    <Motion style={{x: spring(x)}}>
+        {x => ...}
+    ```
+
+
+
+
+
+
+
+
+
 
 
 

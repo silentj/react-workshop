@@ -86,20 +86,22 @@ class DropGrid extends React.Component {
         Math.floor(Math.max(0, Math.min(449, mouseY)) / 150) * 150;
     }
 
-    const markerStyle = {
-      left: markerLeft,
-      top: markerTop
-    };
+    const markerStyle = isDraggingMarker ?
+        {left: markerLeft, top: markerTop} :
+        {left: spring(markerLeft), top: spring(markerTop)};
 
     return (
       <div className="grid" ref={node => (this.node = node)}>
-        <Draggable
-          className="grid-marker"
-          style={markerStyle}
-          onDragStart={this.handleDragStart}
-          onDrag={this.handleDrag}
-          onDrop={this.handleDrop}
-        />
+          <Motion style={markerStyle}>
+              {markerStyle =>
+                <Draggable
+                  className="grid-marker"
+                  style={markerStyle}
+                  onDragStart={this.handleDragStart}
+                  onDrag={this.handleDrag}
+                  onDrop={this.handleDrop}
+                />}
+          </Motion>
         <div className="grid-cell">1</div>
         <div className="grid-cell">2</div>
         <div className="grid-cell">3</div>
