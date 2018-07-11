@@ -15,57 +15,102 @@
 ////////////////////////////////////////////////////////////////////////////////
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 
 import getAddressFromCoords from "./utils/getAddressFromCoords";
 import LoadingDots from "./LoadingDots";
 
-class App extends React.Component {
-  state = {
-    coords: {
-      latitude: null,
-      longitude: null
-    },
-    error: null
-  };
+class GeoAddress extends React.Component {
+    state = {
+        address: null,
+    };
 
-  componentDidMount() {
-    this.geoId = navigator.geolocation.watchPosition(
-      position => {
-        this.setState({
-          coords: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-        });
-      },
-      error => {
-        this.setState({ error });
-      }
-    );
-  }
+    componentDidMount() {
+        this.fetchAddress();
+    }
 
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.geoId);
-  }
+    componentDidUpdate(prevProps) {
+        if (prevProps.longitude !== this.props.longitude && prevProps.latitude !== this.props.latitude) {
+            this.fetchAddress();
+        }
+    }
 
-  render() {
-    return (
-      <div>
-        <h1>Geolocation</h1>
-        {this.state.error ? (
-          <div>Error: {this.state.error.message}</div>
-        ) : (
-          <dl>
-            <dt>Latitude</dt>
-            <dd>{this.state.coords.latitude || <LoadingDots />}</dd>
-            <dt>Longitude</dt>
-            <dd>{this.state.coords.longitude || <LoadingDots />}</dd>
-          </dl>
-        )}
-      </div>
-    );
-  }
+    fetchAddress() {
+        const {latitude, longitude} = this.props;
+        if (latitude && longitude) {
+            console.log("calling getAddressFromCoords", this.props, this.state);
+            getAddressFromCoords(latitude, longitude)
+               .then(address => this.setState({address: address}));
+        } else {
+            this.setState({address: null});
+        }
+    }
+
+    render() {
+        return this.props.children(this.state.address);
+    }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+class GeoPosition extends React.Component {
+    state = {
+        coords: {
+            latitude: null,
+            longitude: null
+        },
+        error: null
+    };
+
+    componentDidMount() {
+        this.geoId = navigator.geolocation.watchPosition(
+            position => {
+                this.setState({
+                    coords: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }
+                });
+            },
+            error => {
+                this.setState({error});
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.geoId);
+    }
+
+    render() {
+        return this.props.children(this.state)
+    }
+}
+
+class App extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>Geolocation</h1>
+                <GeoPosition>
+                    {geoPosition =>
+                        geoPosition.error ? (
+                            <div>Error: {geoPosition.error.message}</div>
+                        ) : (
+                            <dl>
+                                <dt>Latitude</dt>
+                                <dd>{geoPosition.coords.latitude || <LoadingDots/>}</dd>
+                                <dt>Longitude</dt>
+                                <dd>{geoPosition.coords.longitude || <LoadingDots/>}</dd>
+                                <dt>Address</dt>
+                                <GeoAddress latitude={geoPosition.coords.latitude}
+                                            longitude={geoPosition.coords.longitude}>
+                                    {(address) => <dd>{address || <LoadingDots/>}</dd>}
+                                </GeoAddress>
+                            </dl>
+                        )
+                    }
+                </GeoPosition>
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(<App/>, document.getElementById("app"));

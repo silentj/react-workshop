@@ -6,6 +6,9 @@ Random
 
 - Webpack is what watches the directory and republisheds updated files
 - Instead of MVC, he tends to think of State, Markup and Behaviour
+- `this.setState(...)` will always force a re-render loop even if the state is the same. React doesn't diff your state.
+- Some suggest not calling `this.setState(...)` in `componentDidUpdate()` - he fees that's a bit over-the-top but it's probably still something to avoid 
+
 
 Rendering
 ---------
@@ -82,16 +85,26 @@ Higher-Order Components
 - Higher order components are usually named `withXxx` where `xxxx` is the name of the prop it adds
 - Higher order components must be sure to pass through all the props to their wrapped components
 - `<Fragment>` is a way to return two elements from `render()` but it doesn't actually render anything to the page
+- Usually, you pass `{...this.props}` first, then the named properties
 
 
 Render Props
 ------------
 
 - For a long while, higher-order components were _the_ way to share code in React. But there's a reasonable amount of boilerplate to them.
-- Merging props is one problem area. Two higher-order components that clash on props, there is no error/warning (unlike with mixins)
--  
-
-
+- Problems with higher-order components:
+    - Property clashing: Two higher-order components that populate the same prop - there is no error/warning (unlike with mixins)
+    - Indirection: a component that is counting on being wrapped gets properties from some magic place
+    - Unusual composition: Normally, in React, we compose components in the `render()` function. But not with higher-order components 
+- Render props is a component where one of the props is a `render` function that takes some args. And the component calls that prop with some state args:
+    ```
+        render() {
+            return.this.props.render(this.state.xxxx);
+        }
+    ```
+- Sometimes the render prop is called `children` and then the function could be a child of the component tag
+- Render props compose within the `render` function. Higher-order components compose staticly outside `render`, which isn't very React-y.
+- He suggests using a higher-order component (over render props) if you need access to the prop that the render prop would gives you outside of the `render` method.
 
 
 
