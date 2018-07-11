@@ -18,39 +18,65 @@ import PropTypes from "prop-types";
 import * as RainbowListDelegate from "./RainbowListDelegate";
 
 class ListView extends React.Component {
-  static propTypes = {
-    numRows: PropTypes.number.isRequired,
-    rowHeight: PropTypes.number.isRequired,
-    renderRowAtIndex: PropTypes.func.isRequired
-  };
+    static propTypes = {
+        numRows: PropTypes.number.isRequired,
+        rowHeight: PropTypes.number.isRequired,
+        renderRowAtIndex: PropTypes.func.isRequired
+    };
 
-  render() {
-    const { numRows, rowHeight, renderRowAtIndex } = this.props;
-    const totalHeight = numRows * rowHeight;
+    divRef = React.createRef();
 
-    const items = [];
+    state = {
+        scrollTop: 0,
+        clientHeight: 0,
+    };
 
-    let index = 0;
-    while (index < numRows) {
-      items.push(<li key={index}>{renderRowAtIndex(index)}</li>);
-      index++;
+    handleScroll = e => {
+        this.setState({scrollTop: e.target.scrollTop});
+    };
+
+    componentDidMount() {
+        this.adjustClientHeight();
+        window.addEventListener('resize', this.adjustClientHeight);
     }
 
-    return (
-      <div style={{ height: "100vh", overflowY: "scroll" }}>
-        <div style={{ height: totalHeight }}>
-          <ol>{items}</ol>
-        </div>
-      </div>
-    );
-  }
+    adjustClientHeight = () => this.setState({clientHeight: this.divRef.clientHeight});
+
+    render() {
+        const {numRows, rowHeight, renderRowAtIndex} = this.props;
+        const totalHeight = numRows * rowHeight;
+
+        const firstElementShown = Math.floor(this.state.scrollTop / this.props.rowHeight);
+        const firstElementPosition = firstElementShown * this.props.rowHeight;
+
+        const lastElementShown = Math.min(numRows,
+            Math.ceil((this.state.scrollTop + this.state.clientHeight) / this.props.rowHeight));
+
+        const items = [];
+
+        let index = firstElementShown;
+        while (index < lastElementShown) {
+            items.push(<li key={index}>{renderRowAtIndex(index)}</li>);
+            index++;
+        }
+
+        return (
+            <div style={{height: "100vh", overflowY: "scroll"}}
+                 onScroll={this.handleScroll}
+                 ref={ref => this.divRef = ref}>
+                <div style={{height: totalHeight, boxSizing: 'border-box', paddingTop: firstElementPosition }}>
+                    <ol>{items}</ol>
+                </div>
+            </div>
+        );
+    }
 }
 
 ReactDOM.render(
-  <ListView
-    numRows={500}
-    rowHeight={RainbowListDelegate.rowHeight}
-    renderRowAtIndex={RainbowListDelegate.renderRowAtIndex}
-  />,
-  document.getElementById("app")
+    <ListView
+        numRows={500000}
+        rowHeight={RainbowListDelegate.rowHeight}
+        renderRowAtIndex={RainbowListDelegate.renderRowAtIndex}
+    />,
+    document.getElementById("app")
 );

@@ -107,6 +107,11 @@ Render Props
 - He suggests using a higher-order component (over render props) if you need access to the prop that the render prop would gives you outside of the `render` method.
 
 
+Render Optimizations
+====================
+
+- `shouldComponentUpdate` is a hook to tell react if it should bother performing an update
+- If your rendering shows it's spending a lot of time doing react tree reconciliation on a component, you can also try using `React.PureComponent`. Usually, this is only something you want to do for leaf nodes: items in a list, etc Things rendered hundreds of times that don't actually change when they're on the page (maybe you'll add more items to a list, but items in the list won't actually change)
 
 
 
