@@ -76,13 +76,20 @@ Imperative to Declarative
 - `render()`'s job is to return a String based on the state. It's totally functional. `componentDidMount/Update()` are not.
 
 
-Higher Order Components
+Higher-Order Components
 -----------------------
 
 - Higher order components are usually named `withXxx` where `xxxx` is the name of the prop it adds
 - Higher order components must be sure to pass through all the props to their wrapped components
+- `<Fragment>` is a way to return two elements from `render()` but it doesn't actually render anything to the page
 
 
+Render Props
+------------
+
+- For a long while, higher-order components were _the_ way to share code in React. But there's a reasonable amount of boilerplate to them.
+- Merging props is one problem area. Two higher-order components that clash on props, there is no error/warning (unlike with mixins)
+-  
 
 
 
