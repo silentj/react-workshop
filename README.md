@@ -8,6 +8,7 @@ Random
 - Instead of MVC, he tends to think of State, Markup and Behaviour
 - `this.setState(...)` will always force a re-render loop even if the state is the same. React doesn't diff your state.
 - Some suggest not calling `this.setState(...)` in `componentDidUpdate()` - he fees that's a bit over-the-top but it's probably still something to avoid 
+- His general rule: if you need something for `render()`ing, then it needs to be in `state`. If you don't need it in the `render()` method, then don't bother putting it in `state`.
 
 
 Rendering
@@ -147,7 +148,14 @@ Context
         }
     ```
 
+Mini Router
+-----------
 
+- Router sits at the top and is the state container
+- Routes are responsible for reading that data (the url) and decide whether or not to render based on the url.path matches
+- Two ways to render:
+    render (takes a render function) and component (takes a component _class name_ - not instance)
+- Links push the url onto the URL stack
 
 
 
