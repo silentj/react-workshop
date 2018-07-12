@@ -125,13 +125,27 @@ Animation
         {x => ...}
     ```
 
+
 Compound Components
 -------------------
 
 - He prefaces non-public props with `_`
 - Functions used: `React.cloneElement(element, propsToAdd)`, `React.Children.map(this.props.children, (child, index) => {fn})`, `React.Children.toArray(this.props.children)`
 
-     
+
+Context
+-------
+
+- `const TabsContext = React.createContext()`
+    - He did this up-top - exactly like declaring a component (becuase it kinda is) 
+- `<TabsContext.Provider value={{activeIndex: index}}>` - Put this somewhere in a render context
+- `<TabsContext.Consumer>` - as `value` changes, this will get called with the new value
+    ```
+        <TabsContext.Consumer>
+        {context =>
+            ... render and use context.activeIndex ...
+        }
+    ```
 
 
 

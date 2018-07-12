@@ -17,35 +17,63 @@
 ////////////////////////////////////////////////////////////////////////////////
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
+
+const FormContext = React.createContext();
 
 class Form extends React.Component {
+
+  state = {
+
+  };
+
+  onFormValueChange = (key, value) => {
+    this.setState({[key]: value});
+  };
+
   render() {
-    return <div>{this.props.children}</div>;
+    return <FormContext.Provider value={{
+      onSubmit: () => this.props.onSubmit(this.state),
+      onFormValueChange: this.onFormValueChange,
+    }}>
+      <div>{this.props.children}</div>
+    </FormContext.Provider>;
   }
 }
 
 class SubmitButton extends React.Component {
   render() {
-    return <button>{this.props.children}</button>;
+    return <FormContext.Consumer>
+      {context =>
+        <button onClick={context.onSubmit}>{this.props.children}</button>
+      }
+    </FormContext.Consumer>
   }
 }
 
 class TextInput extends React.Component {
   render() {
     return (
-      <input
-        type="text"
-        name={this.props.name}
-        placeholder={this.props.placeholder}
-      />
+      <FormContext.Consumer>
+        {context =>
+          <input onKeyDown={e => {
+            if (e.key === 'Enter') {
+              context.onSubmit(e);
+            }
+          }}
+                 type="text"
+                 name={this.props.name}
+                 placeholder={this.props.placeholder}
+                 onChange={e => context.onFormValueChange(this.props.name, e.target.value)}
+          />
+        }
+      </FormContext.Consumer>
     );
   }
 }
 
 class App extends React.Component {
-  handleSubmit = () => {
-    alert("YOU WIN!");
+  handleSubmit = (data) => {
+    alert(`CONGRATULATIONS, ${data.firstName.toUpperCase()} ${data.lastName.toUpperCase()}!! JVDL SAYS "YOU WIN!"`);
   };
 
   render() {
@@ -57,8 +85,8 @@ class App extends React.Component {
 
         <Form onSubmit={this.handleSubmit}>
           <p>
-            <TextInput name="firstName" placeholder="First Name" />{" "}
-            <TextInput name="lastName" placeholder="Last Name" />
+            <TextInput name="firstName" placeholder="First Name"/>{" "}
+            <TextInput name="lastName" placeholder="Last Name"/>
           </p>
           <p>
             <SubmitButton>Submit</SubmitButton>
@@ -69,4 +97,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(<App/>, document.getElementById("app"));
