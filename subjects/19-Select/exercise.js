@@ -58,7 +58,10 @@ class Select extends React.Component {
           {selectedChild.props.children} <span className="arrow">▾</span>
         </div>
         {this.state.isOpen ? <div className="options">{React.Children.map(this.props.children, child =>
-          React.cloneElement(child, {_onClick: () => this.handleChildClick(child.props.value)}))
+          React.cloneElement(child, {
+            _onClick: () => this.handleChildClick(child.props.value),
+            _selected: child.props.value === this.getValue(),
+          }))
         }</div> : null}
       </div>
     );
@@ -68,10 +71,12 @@ class Select extends React.Component {
 class Option extends React.Component {
   static propTypes = {
     _onClick: PropTypes.func,
+    _selected: PropTypes.bool,
   };
 
   render() {
-    return <div className="option" onClick={this.props._onClick}>{this.props.children}</div>;
+    return <div className={"option" + (this.props._selected ? " selected" : "")}
+                onClick={this.props._onClick}>{this.props.children}</div>;
   }
 }
 

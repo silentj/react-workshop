@@ -28,3 +28,10 @@
   background: #eee;
 }
 
+.option.selected {
+  background: #ccf;
+}
+
+.option.selected:hover {
+  background: #eef;
+}
