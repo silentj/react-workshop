@@ -108,14 +108,14 @@ Render Props
 
 
 Render Optimizations
-====================
+--------------------
 
 - `shouldComponentUpdate` is a hook to tell react if it should bother performing an update
 - If your rendering shows it's spending a lot of time doing react tree reconciliation on a component, you can also try using `React.PureComponent`. Usually, this is only something you want to do for leaf nodes: items in a list, etc Things rendered hundreds of times that don't actually change when they're on the page (maybe you'll add more items to a list, but items in the list won't actually change)
 
 
 Animation
-=========
+---------
 
 - Common approach is to move animation (side effect) into the `componentDidUpdate` method. But then you can't really see that there's something going on in the component.
 - Check out `react-motion` and it's `<Motion>` component
@@ -125,8 +125,13 @@ Animation
         {x => ...}
     ```
 
+Compound Components
+-------------------
 
+- He prefaces non-public props with `_`
+- Functions used: `React.cloneElement(element, propsToAdd)`, `React.Children.map(this.props.children, (child, index) => {fn})`, `React.Children.toArray(this.props.children)`
 
+     
 
 
 

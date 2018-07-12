@@ -23,23 +23,41 @@ import PropTypes from "prop-types";
 
 class RadioGroup extends React.Component {
   static propTypes = {
-    defaultValue: PropTypes.string
+    defaultValue: PropTypes.string,
+    onChange: PropTypes.func,
   };
 
+  state = {
+    selectedValue: this.props.defaultValue,
+  };
+
+  onChange(newValue) {
+    this.setState({selectedValue: newValue});
+    if (this.props.onChange) {
+      this.props.onChange(newValue);
+    }
+  }
+
   render() {
-    return <div>{this.props.children}</div>;
+    return <div>{React.Children.map(this.props.children, (child, index) => {
+      const value = child.props.value;
+      const selected = this.state.selectedValue === value;
+      return React.cloneElement(child, {_selected: selected, _onClick: () => {this.onChange(value);}})
+    })}</div>;
   }
 }
 
 class RadioOption extends React.Component {
   static propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string.isRequired,
+    _selected: PropTypes.bool,
+    _onClick: PropTypes.func,
   };
 
   render() {
     return (
-      <div>
-        <RadioIcon isSelected={false} /> {this.props.children}
+      <div onClick={this.props._onClick}>
+        <RadioIcon isSelected={this.props._selected} /> {this.props.children}
       </div>
     );
   }
@@ -69,12 +87,18 @@ class RadioIcon extends React.Component {
 }
 
 class App extends React.Component {
+  static defaultValue = "fm";
+
+  state = {
+    selectedOption: App.defaultValue,
+  };
+
   render() {
     return (
       <div>
-        <h1>♬ It's about time that we all turned off the radio ♫</h1>
+        <h1>♬ I'm listening to: {this.state.selectedOption} ♫</h1>
 
-        <RadioGroup defaultValue="fm">
+        <RadioGroup defaultValue="fm" onChange={(newValue) => {this.setState({selectedOption: newValue})}}>
           <RadioOption value="am">AM</RadioOption>
           <RadioOption value="fm">FM</RadioOption>
           <RadioOption value="tape">Tape</RadioOption>
@@ -85,4 +109,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(<App/>, document.getElementById("app"));
