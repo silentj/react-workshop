@@ -42,7 +42,7 @@ class RadioGroup extends React.Component {
     return <div>{React.Children.map(this.props.children, (child, index) => {
       const value = child.props.value;
       const selected = this.state.selectedValue === value;
-      return React.cloneElement(child, {_selected: selected, _onClick: () => {this.onChange(value);}})
+      return React.cloneElement(child, {_selected: selected, _onSelect: () => {this.onChange(value);}})
     })}</div>;
   }
 }
@@ -51,12 +51,18 @@ class RadioOption extends React.Component {
   static propTypes = {
     value: PropTypes.string.isRequired,
     _selected: PropTypes.bool,
-    _onClick: PropTypes.func,
+    _onSelect: PropTypes.func,
+  };
+
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      this.props._onSelect(e);
+    }
   };
 
   render() {
     return (
-      <div onClick={this.props._onClick}>
+      <div onClick={this.props._onSelect} tabIndex="0" onKeyDown={this.handleKeyDown}>
         <RadioIcon isSelected={this.props._selected} /> {this.props.children}
       </div>
     );
