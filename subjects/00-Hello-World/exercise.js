@@ -12,4 +12,4 @@ function App() {
   // Here is another line
 }
 
-ReactDOM.render(<App />, document.getElementById("app-great"));
+ReactDOM.render(<App />, document.getElementById("app-good"));
