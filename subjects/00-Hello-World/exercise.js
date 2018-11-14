@@ -8,7 +8,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 function App() {
-  return <div>Hello,  Brent!</div>;
+  return <div>Hello, Brent!</div>;
+  // Here is another line
 }
 
 ReactDOM.render(<App />, document.getElementById("app-great"));
