@@ -3,7 +3,6 @@ Why React?
 
 Because react is teh best!
 
-
 So much awesome.
 
 All the things!!!?!!
