@@ -1,7 +1,7 @@
 Why React?
 ==========
 
-Because react is teh best!
+Because react is the best!
 So much awesome.
 
 All the things!!!?!!
