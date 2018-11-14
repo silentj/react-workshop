@@ -11,4 +11,4 @@ function App() {
   return <div>Hello,  Brent!</div>;
 }
 
-ReactDOM.render(<App />, document.getElementById("app-awesome"));
+ReactDOM.render(<App />, document.getElementById("app-great"));
