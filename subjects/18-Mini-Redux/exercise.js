@@ -1,4 +1,7 @@
 /*
+This exercise.js is out of date. He said not to look here - we really want to start with exercise/index.js
+ */
+/*
 The goal of this exercise is to add a button beside each contact in the list
 that can be used to delete that contact. To do this, you'll need to perform
 the following steps:
