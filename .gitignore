@@ -1,3 +1,10 @@
 node_modules
 yarn-error.log
 public/**/*.html
+
+# This is for monkey files
+# This is for IDEA files
+# This is another comment added in a comment thread
+# This is another comment added in a comment thread xxx
+/.idea
+package-lock.json
