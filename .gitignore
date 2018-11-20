@@ -4,5 +4,6 @@ public/**/*.html
 
 # This is for IDEA files
 # This is for IDEA files
+# This is another comment added in a comment thread
 /.idea
 package-lock.json
