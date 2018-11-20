@@ -3,5 +3,6 @@ yarn-error.log
 public/**/*.html
 
 # This is for IDEA files
+# This is for IDEA files
 /.idea
 package-lock.json
